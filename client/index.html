@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+
+	<title>XML3D Step Importer</title>
+
+	<!-- Meta -->
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="keywords" content="XML3d, Step file, importer">
+	<meta name="description" content="Step/stp file format importer in xml3d.">
+	<meta name="author" content="Antonio Carminelli">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+
+	<!-- load CSS -->
+	<link rel="stylesheet" type="text/css" href="css/main.css">
+
+</head>
+<body>
+
+	<div id="sidebar">
+		<h1>XML3D Step Importer</h1>
+		<span>Upload Step File</span>
+		<input type="file" class="upload" id="btnInputGeo" >
+
+		<button type="button" id="btnXYpos"  class="btn3Dswitch" name="btnXYpos">XY+</button>
+		<button type="button" id="btnXYneg"  class="btn3Dswitch" name="btnXYneg">XY-</button>
+		<button type="button" id="btnXZpos"  class="btn3Dswitch" name="btnXZpos">XZ+</button>
+		<button type="button" id="btnXZneg"  class="btn3Dswitch" name="btnXZneg">XZ-</button>
+		<button type="button" id="btnYZpos"  class="btn3Dswitch" name="btnYZpos">YZ+</button>
+		<button type="button" id="btnYZneg"  class="btn3Dswitch" name="btnYZneg">YZ-</button>
+		<button type="button" id="btnZoomAll" class="btn3Dswitch" name="btnZoomAll">Zoom All</button>
+		<button type="button" id="btnArrows"  name="btnArrows">Show/hide arrows</button>
+
+	</div>
+
+	<div id="frameView">
+		<xml3d id="frameXML3D" xmlns="http://www.xml3d.org/2009/xml3d" activeView="#viewMain" >
+
+			<shader id="phongGreen" script="urn:xml3d:shader:phong">
+				<float3 name="diffuseColor" >0.2 0.8 0.2</float3>
+				<float name="ambientIntensity" >0.7</float>
+			</shader>
+
+			<shader id="phongBlue" script="urn:xml3d:shader:phong">
+				<float3 name="diffuseColor">0.1 0.4 0.8</float3>
+				<float name="ambientIntensity">0.9</float>
+			</shader>
+
+			<lightshader id="light1" script="urn:xml3d:lightshader:directional" >
+				<float3 name="intensity" >1 1 1</float3>
+			</lightshader>
+
+			<light shader="#light1" > </light>
+
+			<navigation mode="examine" speed="100" > </navigation>
+
+			<view id="viewMain" position="0 0 100" orientation="0 0 0 0" fieldOfView="0.7854"> </view>
+
+			<defs>
+				<shader id="redShader" script="urn:xml3d:shader:flat">
+					<float3 name="diffuseColor">0.8 0.2 0.2</float3>
+					<bool name="useVertexColor">false</bool>
+				</shader>
+				<data id="dataXArrow">
+					<int name="index" id="indexXarrow">0 1 1 0 1 2 1 3 1 4 1 5 2 4 3 4 3 5 5 2</int>
+					<float3 name="position">0 0 0 150 0 0 140 1 0 140 -1 0 140 0 1 140 0 -1</float3>
+				</data>
+				<data id="dataXLine">
+					<data src="#dataXArrow"></data>
+				</data>
+
+				<shader id="greenShader" script="urn:xml3d:shader:flat">
+					<float3 name="diffuseColor">0.2 0.8 0.2</float3>
+					<bool name="useVertexColor">false</bool>
+				</shader>
+				<data id="dataYArrow">
+					<int name="index" id="indexYarrow">0 1 1 0 1 2 1 3 1 4 1 5 2 4 3 4 3 5 5 2</int>
+					<float3 name="position">0 0 0 0 150 0 1 140 0 -1 140 0 0 140 1 0 140 -1</float3>
+				</data>
+				<data id="dataYLine">
+					<data src="#dataYArrow"></data>
+				</data>
+
+				<shader id="blueShader" script="urn:xml3d:shader:flat">
+					<float3 name="diffuseColor">0.1 0.4 0.8</float3>
+					<bool name="useVertexColor">false</bool>
+					<float name="transparency" id="transparencyBlue">0</float>
+				</shader>
+				<data id="dataZArrow">
+					<int name="index" id="indexZarrow">0 1 1 0 1 2 1 3 1 4 1 5 2 4 3 4 3 5 5 2</int>
+					<float3 name="position">0 0 0 0 0 150 1 0 140 -1 0 140 0 1 140 0 -1 140</float3>
+				</data>
+				<data id="dataZLine">
+					<data src="#dataZArrow"></data>
+				</data>
+
+			</defs>
+
+			<transform id="transformArrowX" scale="1.0 1.0 1.0"></transform>
+			<transform id="transformArrowY" scale="1.0 1.0 1.0"></transform>
+			<transform id="transformArrowZ" scale="1.0 1.0 1.0"></transform>
+
+			<group shader="#redShader" transform="#transformArrowX">
+					<mesh src="#dataXLine" type="linestrips"></mesh>
+			</group>
+
+			<group shader="#greenShader" transform="#transformArrowY">
+					<mesh src="#dataYLine" type="linestrips"></mesh>
+			</group>
+
+			<group shader="#blueShader" transform="#transformArrowZ">
+					<mesh src="#dataZLine" type="linestrips"></mesh>
+			</group>
+
+		</xml3d>
+	</div>
+
+	<!-- Js libraries -->
+	<script type="text/javascript" src="js/libs/xml3d.js"></script>
+	<script type="text/javascript" src="js/libs/xml3d-camera.js"></script>
+	<script type="text/javascript" src="js/libs/jquery.js"></script>
+
+	<!-- load javascript files -->
+	<script type="text/javascript" src="js/script-xml3d.js"></script>
+	<script type="text/javascript" src="js/main.js"></script>
+	<script type="text/javascript" src="js/container.js"></script>
+	<script type="text/javascript" src="js/socketremote.js"></script>
+	<script type="text/javascript" src="js/geoDB.js"></script>
+	<script type="text/javascript" src="js/viewManager.js"></script>
+
+	<script type="text/javascript">
+	window.onload = function() {
+	maincontainer = new container("viewMain");
+	maincontainer.socket.socket_init();
+	}
+	</script>
+</body>
+</html>
